@@ -9,11 +9,11 @@ async def load(ctx, extension):
 	if ctx.author.id in config.developers:
 		try:
 			client.load_extension(f"cogs.{extension}")
-			await ctx.send("Ког успешно загружен.")
+			await ctx.send("Cog has been succesfully laucnhed")
 		except:
-			await ctx.send(f"Ког {extension} не найден!")
+			await ctx.send(f"Cog {extension} was not found!")
 	else:
-		await ctx.send("Вам не положено использовать данную команду!")
+		await ctx.send("You don't have enough permissions to use this command!")
 		
 @client.command() 
 async def unload(ctx, extension):
@@ -22,9 +22,9 @@ async def unload(ctx, extension):
 			client.unload_extension(f"cogs.{extension}")
 			await ctx.send("Ког успешно отгружен.")
 		except:
-			await ctx.send(f"Ког {extension} не найден!")
+			await ctx.send(f"Cog {extension} was not found!")
 	else:
-		await ctx.send("Вам не положено использовать данную команду!")
+		await ctx.send("You don't have enough permissions to use this command!")
 		
 @client.command() 
 async def reload(ctx, extension):
@@ -32,11 +32,11 @@ async def reload(ctx, extension):
 		try:
 			client.unload_extension(f"cogs.{extension}")
 			client.load_extension(f"cogs.{extension}")
-			await ctx.send("Ког успешно перезагружен.")
+			await ctx.send("Cog has been successfully reastarted.")
 		except:
-			await ctx.send(f"Ког {extension} не найден!")
+			await ctx.send(f"Cog {extension} was not found")
 	else:
-		await ctx.send("Вам не положено использовать данную команду!")
+		await ctx.send("You don't have enough permissions to use this command!")
 
 def insert_returns(body):
     if isinstance(body[-1], ast.Expr):
