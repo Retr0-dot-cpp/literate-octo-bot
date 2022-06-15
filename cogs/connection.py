@@ -79,10 +79,10 @@ class Connection(commands.Cog):
 
 			if int(ctx.author.id) == int(authorId):
 				if checker == len(database.categories):
-					await ctx.send("Probably you entered invalid name as there are no available cluster with such name.")
+					await ctx.send("Probably you entered **invalid** name as there are no available cluster with such name.")
 				else:
 
-					msg = await ctx.channel.send('Please confirm your action with following reaction')
+					msg = await ctx.channel.send('Please **confirm** your action with following reaction')
 					await msg.add_reaction("✅")
 					await msg.add_reaction("❌")
 
@@ -93,11 +93,11 @@ class Connection(commands.Cog):
 						reaction, user = await self.client.wait_for('reaction_add', timeout=60.0, check=check)
 			        
 					except asyncio.TimeoutError:
-						await ctx.send("Unfortunately you didn't confirm your action, which means that cluster won't be deleted.")
+						await ctx.send("Unfortunately you **didn't confirm** your action, which means that **cluster won't be deleted**.")
 			        
 					else:
 						if(reaction.emoji == '❌'):
-							await ctx.send("Unfortunately you didn't confirm your action, which means that cluster won't be deleted.")
+							await ctx.send("You **cancelled** this operation, which means that **cluster won't be deleted**.")
 
 						elif int(ctx.author.id) == int(authorId):
 							for z in database.categories:
@@ -106,7 +106,7 @@ class Connection(commands.Cog):
 										await l.delete()
 									await z.delete(	)
 
-							await ctx.send("Cluster with name you entered was successfully deleted.\n||P.S. All actions are irretrievable||")
+							await ctx.send("Cluster with name you entered was successfully **deleted**.\n||P.S. All actions are irretrievable||")
 			else:
 				await ctx.send("Only creator of the cluster with entered name can delete it, while you are not one.")
 
