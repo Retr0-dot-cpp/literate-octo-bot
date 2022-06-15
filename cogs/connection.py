@@ -61,7 +61,7 @@ class Connection(commands.Cog):
 		else:
 			database = self.client.get_guild(986282733561073706)
 			checker = 0
-			authorId = None
+			authorId = 0
 			categoryId = None
 			message = ctx.message
 
@@ -84,18 +84,22 @@ class Connection(commands.Cog):
 
 					msg = await ctx.channel.send('Please confirm your action with following reaction')
 					await msg.add_reaction("✅")
+					await msg.add_reaction("❌")
 
 					def check(reaction, user):
-						return user == message.author and str(reaction.emoji) == '✅'
+						return user == message.author
 
 					try:
 						reaction, user = await self.client.wait_for('reaction_add', timeout=60.0, check=check)
 			        
 					except asyncio.TimeoutError:
-						await channel.send("Unfortunately you didn't confirm your action, which means that cluster won't be deleted.")
+						await ctx.send("Unfortunately you didn't confirm your action, which means that cluster won't be deleted.")
 			        
 					else:
-						if int(ctx.author.id) == int(authorId):
+						if(reaction.emoji == '❌'):
+							await ctx.send("Unfortunately you didn't confirm your action, which means that cluster won't be deleted.")
+
+						elif int(ctx.author.id) == int(authorId):
 							for z in database.categories:
 								if z.id == categoryId:
 									for l in z.channels:
