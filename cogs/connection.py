@@ -26,7 +26,8 @@ class Connection(commands.Cog):
 		server = database.categories[0]
 		checker = server.channels[0]
 
-		await checker.edit(name=f"connections-{connectionAmount}")
+		await checker.delete()
+		await server.create_text_channel(name=f"connections-{connectionAmount}")
 		await ctx.send("Connection amount has been manually and successfully updated")
 
 		print("Connection amount has been reloaded")
@@ -62,6 +63,7 @@ class Connection(commands.Cog):
 			checker = 0
 			authorId = None
 			categoryId = None
+			message = ctx.message
 
 			for i in database.categories:
 				if i.name == name:
@@ -75,19 +77,34 @@ class Connection(commands.Cog):
 				else:
 					checker += 1
 
-			if checker == len(database.categories):
-				await ctx.send("Probably you entered invalid name as there are no available cluster with such name.")
-			else:
-				if int(ctx.author.id) == int(authorId):
-					for z in database.categories:
-						if z.id == categoryId:
-							for l in z.channels:
-								await l.delete()
-							await z.delete()
-
-					await ctx.send("Cluster with name you entered was successfully deleted.\n||P.S. All actions are irretrievable||")
+			if int(ctx.author.id) == int(authorId):
+				if checker == len(database.categories):
+					await ctx.send("Probably you entered invalid name as there are no available cluster with such name.")
 				else:
-					await ctx.send("Only creator of the cluster with entered name can delete it, while you are not one.")
+
+					msg = await ctx.channel.send('Please confirm your action with following reaction')
+					await msg.add_reaction("✅")
+
+					def check(reaction, user):
+						return user == message.author and str(reaction.emoji) == '✅'
+
+					try:
+						reaction, user = await self.client.wait_for('reaction_add', timeout=60.0, check=check)
+			        
+					except asyncio.TimeoutError:
+						await channel.send("Unfortunately you didn't confirm your action, which means that cluster won't be deleted.")
+			        
+					else:
+						if int(ctx.author.id) == int(authorId):
+							for z in database.categories:
+								if z.id == categoryId:
+									for l in z.channels:
+										await l.delete()
+									await z.delete(	)
+
+							await ctx.send("Cluster with name you entered was successfully deleted.\n||P.S. All actions are irretrievable||")
+			else:
+				await ctx.send("Only creator of the cluster with entered name can delete it, while you are not one.")
 
 def setup(client):
 	client.add_cog(Connection(client))
